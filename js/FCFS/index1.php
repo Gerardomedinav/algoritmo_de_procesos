@@ -76,7 +76,7 @@
     <button onclick="window.location.href='../../index.html';">Volver al Home</button>
     <br><br><br>
 
-    <script src="./script.js"></script> <!-- Enlace al archivo JS -->
+    <script src="script.js"></script> <!-- Enlace al archivo JS -->
 </body>
 
 </html>
