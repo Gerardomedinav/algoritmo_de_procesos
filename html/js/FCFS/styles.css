@@ -1,0 +1,231 @@
+/* Reset básico para quitar márgenes y rellenos predeterminados */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo general para el cuerpo */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 20px;
+}
+
+/* Estilo para los encabezados */
+h1, h2 {
+    color: #0056b3;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Estilo para el canvas (gráfico) */
+canvas {
+    display: block;
+    margin: 0 auto;
+    max-width: 80%;
+    height: auto;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para la tabla */
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para las celdas de la tabla */
+table, th, td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: center;
+}
+
+/* Estilo para los encabezados de la tabla */
+th {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* Alternar colores de las filas para mejor legibilidad */
+tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #e6f2ff;
+}
+
+/* Imágenes más pequeñas y centradas */
+img {
+    display: block;
+    margin: 0 auto;
+    max-width: 50%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustar el tamaño de fuente en dispositivos móviles */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+    table {
+        width: 100%;
+    }
+    canvas {
+        max-width: 100%;
+    }
+    img {
+        max-width: 80%;
+    }
+}
+/* Estilo para los botones */
+button {
+    background-color: #007bff !important; /* Color de fondo azul */ 
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cursor de puntero */
+    transition: background-color 0.3s ease; /* Transición para efecto hover */
+    margin: 10px; /* Espaciado alrededor del botón */
+}
+
+/* Estilo para los botones al pasar el ratón por encima */
+button:hover {
+    background-color: #0056b3; /* Color de fondo azul oscuro */
+}
+
+/* Estilo para los botones al estar deshabilitados */
+button:disabled {
+    background-color: #cccccc; /* Color de fondo gris */
+    cursor: not-allowed; /* Cursor de no permitido */
+}
+
+#procesosContainer {
+    width: 90%; /* Ajusta el ancho en relación al contenedor principal */
+    max-width: 1200px; /* Ancho máximo para pantallas grandes */
+    padding: 20px; /* Espaciado interno */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+    text-align: center; /* Centra el contenido interno (opcional) */
+    background-color: #fff; /* Fondo blanco (opcional) */
+    border: 1px solid #ddd; /* Borde gris claro (opcional) */
+    border-radius: 8px; /* Bordes redondeados (opcional) */
+}
+
+label {
+   
+    font-size: 16px; /* Tamaño de fuente más grande para mejor legibilidad */
+    color: #333; /* Color de texto oscuro */
+    font-weight: bold; /* Negrita para resaltar el texto */
+    margin-bottom: 8px; /* Espacio debajo del label */
+    text-transform: capitalize; /* Para que el texto inicie con mayúscula */
+    letter-spacing: 0.5px; /* Espacio entre letras para mejorar la legibilidad */
+    padding: 5px; /* Un poco de espacio interno */
+    background-color: #f0f8ff; /* Fondo suave */
+    border-radius: 4px; /* Bordes redondeados */
+}
+p {
+    font-size: 18px; /* Tamaño de fuente para mejorar la legibilidad */
+    line-height: 1.6; /* Altura de línea más espaciosa para mejorar la lectura */
+    color: #333; /* Color del texto */
+    margin-bottom: 15px; /* Margen inferior para separar párrafos */
+    text-align: justify; /* Alineación justificada para un aspecto más profesional */
+    padding: 10px; /* Espaciado interno */
+    background-color: #f9f9f9; /* Fondo claro para resaltar el texto */
+    border-left: 4px solid #007bff; /* Borde decorativo en el lado izquierdo */
+    border-radius: 4px; /* Bordes redondeados */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+/* Estilos para los inputs */
+input[type="text"], input[type="number"] {
+ 
+    box-sizing: border-box;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+    border-color: #4CAF50; /* Color de borde en foco */
+    outline: none;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.1); /* Sombra al hacer foco */
+}
+
+/* Estilo para que el contenedor de procesos sea responsivo */
+@media (max-width: 600px) {
+    input[type="text"], input[type="number"] {
+        width: 100%; /* Para pantallas pequeñas, 100% de ancho */
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+}
+
+
+
+/* Asegúrate de que la tabla ocupe el 100% del ancho del contenedor */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Para que las bordes de las celdas no se dupliquen */
+}
+
+/* Asegúrate de que el texto dentro de las celdas se ajuste si es necesario */
+td, th {
+    padding: 8px; /* Espacio dentro de las celdas */
+    text-align: left;
+}
+
+/* Opcional: agregar un borde a las celdas para mejorar la legibilidad */
+td, th {
+    border: 1px solid #ddd; /* Color de borde gris claro */
+}
+
+/* Estilos específicos para pantallas más pequeñas */
+@media screen and (max-width: 600px) {
+    /* Convertir la tabla en una vista de lista para pantallas pequeñas */
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    /* Asegúrate de que los elementos se alineen correctamente */
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        border: 1px solid #ccc;
+        margin-bottom: 10px; /* Espacio entre filas */
+    }
+
+    td {
+        border: none;
+        border-bottom: 1px solid #ddd;
+        position: relative;
+        padding-left: 50%; /* Espacio para etiquetas */
+        white-space: nowrap;
+    }
+
+    td:before {
+        content: attr(data-label); /* Mostrar el título del encabezado como etiqueta */
+        position: absolute;
+        left: 0;
+        width: 45%;
+        padding-left: 10px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+}
