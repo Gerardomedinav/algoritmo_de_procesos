@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planificación Round-Robin con Promedio de Espera</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Enlace al archivo CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Enlace a Chart.js -->
+</head>
+
+<body>
+    <h1>Planificación de Procesos Round-Robin</h1>
+    <br><br><br>
+
+    <!-- Texto explicativo sobre el algoritmo Round-Robin -->
+    <p>
+        El algoritmo <strong>Round-Robin</strong> es un algoritmo de planificación preventiva en el cual cada proceso recibe un 
+        tiempo de ejecución fijo, denominado <strong>quantum</strong>. Si el proceso no termina su ejecución durante su quantum, 
+        se coloca al final de la cola y se le otorga otra oportunidad cuando vuelva a ser su turno.
+    </p>
+    <br><br><br>
+
+    <!-- Formulario para ingresar datos de procesos y el quantum -->
+    <form id="formProcesos">
+        <label for="cantidad">Cantidad de procesos:</label>
+        <input type="number" id="cantidad" name="cantidad" min="1" required>
+        <br><br>
+        <label for="quantum">Quantum (Cuanto de Tiempo):</label>
+        <input type="number" id="quantum" name="quantum" min="1" required>
+        <br><br>
+        <button type="button" onclick="generarFormulario()">Generar Procesos</button>
+    </form>
+    <br><br><br>
+
+    <!-- Aquí se generarán los campos para ingresar los datos de cada proceso -->
+    <div id="procesosContainer"></div>
+    <br><br><br>
+
+    <h2>Resultados de la planificación</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Proceso</th>
+                <th>Tiempo de Llegada</th>
+                <th>Duración</th>
+                <th>Comienzo</th>
+                <th>Finalización</th>
+                <th>Tiempo de Espera</th>
+                <th>Tiempo de Retorno</th>
+            </tr>
+        </thead>
+        <tbody id="tablaRR">
+            <!-- Resultados aquí -->
+        </tbody>
+    </table>
+    <br><br><br>
+    <h2>Promedio de Espera de Esta Planificación</h2>
+    <p id="promedioEspera"></p>
+    <p id="dispersion"></p>
+    <p id="tiempoTotalCPU"></p>
+
+    <br><br><br>
+    <h2>Promedio de Espera de Planificaciones Acumuladas</h2>
+    <p id="promedioGeneral"></p>
+
+    <br><br><br>
+    <h2>Gráfico de comparativos de Procesos (Barras Apiladas)</h2>
+    <canvas id="graficoCanvas" width="800" height="400"></canvas> <br> <br><br> <!-- Gráfico de canvas -->
+    <h2>Dispersión de Datos (Duración de los Procesos)</h2>
+    <canvas id="graficoDispersion" width="500" height="500"></canvas>
+    <p id="explicacionGrafico"></p>
+
+    <br><br><br>
+    <button onclick="window.location.href='../../index.html';">Volver al Home</button>
+    <br><br><br>
+
+    <script src="script.js"></script> <!-- Enlace al archivo JS -->
+</body>
+
+</html>
