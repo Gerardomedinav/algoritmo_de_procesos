@@ -258,7 +258,6 @@ function generarGrafico(procesos) {
     });
 }
 
-// Función para generar el gráfico de dispersión comparativo (Duración vs Tiempo de Espera)
 function generarGraficoDispersion(procesos) {
     const ctx = document.getElementById('graficoDispersion').getContext('2d');
 
@@ -268,21 +267,51 @@ function generarGraficoDispersion(procesos) {
     }
 
     // Datos de dispersión (x será la Duración "burst" y el y será el Tiempo de Espera)
-    const scatterData = procesos.map(proceso => {
-        return { x: proceso.burst, y: proceso.espera };
-    });
+    const scatterData = procesos.map(proceso => ({
+        x: proceso.burst,
+        y: proceso.espera
+    }));
 
-    // Generar el gráfico de dispersión
+    // Calcular la línea de regresión
+    const n = scatterData.length;
+    const sumX = scatterData.reduce((sum, p) => sum + p.x, 0);
+    const sumY = scatterData.reduce((sum, p) => sum + p.y, 0);
+    const sumXY = scatterData.reduce((sum, p) => sum + p.x * p.y, 0);
+    const sumX2 = scatterData.reduce((sum, p) => sum + p.x * p.x, 0);
+
+    const m = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    const b = (sumY - m * sumX) / n;
+
+    // Crear datos para la línea de regresión
+    const minX = Math.min(...scatterData.map(p => p.x));
+    const maxX = Math.max(...scatterData.map(p => p.x));
+    const lineData = [
+        { x: minX, y: m * minX + b },
+        { x: maxX, y: m * maxX + b }
+    ];
+
+    // Generar el gráfico de dispersión con la línea de regresión
     chartInstanceDispersion = new Chart(ctx, {
         type: 'scatter',
         data: {
-            datasets: [{
-                label: 'Duración vs Tiempo de Espera',
-                data: scatterData,
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                pointRadius: 5,
-            }]
+            datasets: [
+                {
+                    label: 'Duración vs Tiempo de Espera',
+                    data: scatterData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    pointRadius: 5,
+                },
+                {
+                    label: 'Línea de Regresión',
+                    data: lineData,
+                    type: 'line',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0,
+                }
+            ]
         },
         options: {
             scales: {
@@ -307,12 +336,13 @@ function generarGraficoDispersion(procesos) {
 
     // Agregar texto explicativo debajo del gráfico
     document.getElementById('explicacionGrafico').textContent = `
-        La correlación negativa entre la duración de los procesos y su tiempo de espera indica que, 
-        en este caso, los procesos con mayor duración tienden a tener menos tiempo de espera, y viceversa.
-        Esto es común en la planificación de procesos bajo el algoritmo FCFS, donde los procesos más largos 
-        que llegan primero suelen retrasar a los más cortos, aumentando su tiempo de espera.
+        La correlación negativa entre la duración de los procesos y su tiempo de espera en el contexto del SJN 
+        refleja la efectividad del algoritmo para reducir el tiempo de espera promedio mediante la priorización 
+        de procesos más cortos. La línea de regresión muestra la tendencia general entre la duración y el tiempo de 
+        espera, ayudando a visualizar cómo los procesos más largos tienden a tener menos tiempo de espera.
     `;
 }
+
 
 
 

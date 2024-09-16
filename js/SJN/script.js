@@ -123,8 +123,8 @@ async function calcularPlanificacion() {
 
 // Función para mostrar los resultados en la tabla
 function mostrarResultados(procesos) {
-    const tablaFCFS = document.getElementById('tablaFCFS');
-    tablaFCFS.innerHTML = ''; // Limpiar la tabla
+    const tablaSJN = document.getElementById('tablaSJN');
+    tablaSJN.innerHTML = ''; // Limpiar la tabla
 
     procesos.forEach(proceso => {
         const row = document.createElement('tr');
@@ -137,7 +137,7 @@ function mostrarResultados(procesos) {
             <td data-label="Tiempo de Espera">${proceso.espera}</td>
             <td data-label="Tiempo de Retorno">${proceso.retorno}</td>
         `;
-        tablaFCFS.appendChild(row);
+        tablaSJN.appendChild(row);
     });
 }
 
@@ -180,69 +180,188 @@ function imprimirPromedioGeneral() {
     if (promedioGeneralElement) {
         const promedioGeneral = promediosGuardados.reduce((sum, p) => sum + p.promedio, 0) / promediosGuardados.length;
         promedioGeneralElement.textContent = `El promedio general de los tiempos de espera es: ${promedioGeneral.toFixed(2)} unidades de tiempo.`;
-    } else {
+    } else {function generarGrafico(procesos) {
+        const ctx = document.getElementById('graficoCanvas').getContext('2d');
+    
+        // Si ya hay un gráfico de Gantt, destruirlo antes de crear uno nuevo
+        if (chartInstanceGantt) {
+            chartInstanceGantt.destroy();
+        }
+    
+        const labels = procesos.map(proceso => proceso.nombre);
+    
+        // Datos para el gráfico
+        const tiemposDeEjecucion = procesos.map(proceso => proceso.burst);
+        const tiemposDeEspera = procesos.map(proceso => proceso.espera);
+        const tiemposDeLlegada = procesos.map(proceso => proceso.llegada);
+    
+        // Preparar los datos del gráfico
+        const data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Tiempo de Llegada',
+                    data: tiemposDeLlegada,
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    stack: 'stack0',
+                    barThickness: 30
+                },
+                {
+                    label: 'Tiempo de Espera',
+                    data: tiemposDeEspera,
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    stack: 'stack0',
+                    barThickness: 30
+                },
+                {
+                    label: 'Tiempo de Ejecución',
+                    data: tiemposDeEjecucion,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    stack: 'stack0',
+                    barThickness: 30
+                }
+            ]
+        };
+    
+        
+    }
         console.error('Elemento con ID "promedioGeneral" no encontrado.');
     }
 }
 
 // Función para generar gráficos con Chart.js
 function generarGrafico(procesos) {
+    const ctx = document.getElementById('graficoCanvas').getContext('2d');
+
+    // Si ya hay un gráfico de Gantt, destruirlo antes de crear uno nuevo
     if (chartInstanceGantt) {
         chartInstanceGantt.destroy();
     }
 
-    const ctxGantt = document.getElementById('graficoGantt').getContext('2d');
-    chartInstanceGantt = new Chart(ctxGantt, {
+    const labels = procesos.map(proceso => proceso.nombre);
+
+    // Datos para el gráfico
+    const tiemposDeEjecucion = procesos.map(proceso => proceso.burst);
+    const tiemposDeEspera = procesos.map(proceso => proceso.espera);
+    const tiemposDeLlegada = procesos.map(proceso => proceso.llegada);
+
+    // Preparar los datos del gráfico
+    const data = {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Tiempo de Llegada',
+                data: tiemposDeLlegada,
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                stack: 'stack0',
+                barThickness: 30
+            },
+            {
+                label: 'Tiempo de Espera',
+                data: tiemposDeEspera,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                stack: 'stack0',
+                barThickness: 30
+            },
+            {
+                label: 'Tiempo de Ejecución',
+                data: tiemposDeEjecucion,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                stack: 'stack0',
+                barThickness: 30
+            }
+        ]
+    };
+
+    // Generar el gráfico de barras apiladas
+    chartInstanceGantt = new Chart(ctx, {
         type: 'bar',
-        data: {
-            labels: procesos.map(p => p.nombre),
-            datasets: [
-                {
-                    label: 'Tiempo de Ejecución',
-                    data: procesos.map(p => p.burst),
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }
-            ]
-        },
+        data: data,
         options: {
+            indexAxis: 'y',
             scales: {
                 x: {
-                    beginAtZero: true
+                    stacked: true
                 },
                 y: {
-                    beginAtZero: true
+                    stacked: true
+                }
+            },
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top'
                 }
             }
         }
     });
 }
 
-// Función para generar el gráfico de dispersión
+
+// Función para generar el gráfico de dispersión comparativo (Duración vs Tiempo de Espera)
 function generarGraficoDispersion(procesos) {
+    const ctx = document.getElementById('graficoDispersion').getContext('2d');
+
+    // Si ya hay un gráfico de dispersión, destruirlo antes de crear uno nuevo
     if (chartInstanceDispersion) {
         chartInstanceDispersion.destroy();
     }
 
-    const ctxDispersion = document.getElementById('graficoDispersion').getContext('2d');
-    chartInstanceDispersion = new Chart(ctxDispersion, {
+    // Datos de dispersión (x será la Duración "burst" y el y será el Tiempo de Espera)
+    const scatterData = procesos.map(proceso => ({
+        x: proceso.burst,
+        y: proceso.espera
+    }));
+
+    // Calcular la línea de regresión
+    const n = scatterData.length;
+    const sumX = scatterData.reduce((sum, p) => sum + p.x, 0);
+    const sumY = scatterData.reduce((sum, p) => sum + p.y, 0);
+    const sumXY = scatterData.reduce((sum, p) => sum + p.x * p.y, 0);
+    const sumX2 = scatterData.reduce((sum, p) => sum + p.x * p.x, 0);
+
+    const m = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    const b = (sumY - m * sumX) / n;
+
+    // Crear datos para la línea de regresión
+    const minX = Math.min(...scatterData.map(p => p.x));
+    const maxX = Math.max(...scatterData.map(p => p.x));
+    const lineData = [
+        { x: minX, y: m * minX + b },
+        { x: maxX, y: m * maxX + b }
+    ];
+
+    // Generar el gráfico de dispersión con la línea de regresión
+    chartInstanceDispersion = new Chart(ctx, {
         type: 'scatter',
         data: {
-            datasets: [{
-                label: 'Tiempo de Ejecución vs Tiempo de Espera',
-                data: procesos.map(p => ({ x: p.burst, y: p.espera })),
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }]
+            datasets: [
+                {
+                    label: 'Duración vs Tiempo de Espera',
+                    data: scatterData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    pointRadius: 5,
+                },
+                {
+                    label: 'Línea de Regresión',
+                    data: lineData,
+                    type: 'line',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0,
+                }
+            ]
         },
         options: {
             scales: {
                 x: {
+                    type: 'linear',
+                    position: 'bottom',
                     title: {
                         display: true,
-                        text: 'Tiempo de Ejecución'
+                        text: 'Duración (Burst Time)'
                     }
                 },
                 y: {
@@ -251,7 +370,19 @@ function generarGraficoDispersion(procesos) {
                         text: 'Tiempo de Espera'
                     }
                 }
-            }
+            },
+            responsive: true
         }
     });
+
+    // Agregar texto explicativo debajo del gráfico
+    document.getElementById('explicacionGrafico').textContent = `
+        La correlación negativa entre la duración de los procesos y su tiempo de espera en el contexto del SJN 
+        refleja la efectividad del algoritmo para reducir el tiempo de espera promedio mediante la priorización 
+        de procesos más cortos. La línea de regresión muestra la tendencia general entre la duración y el tiempo de 
+        espera, ayudando a visualizar cómo los procesos más largos tienden a tener menos tiempo de espera.
+    `;
 }
+
+
+
